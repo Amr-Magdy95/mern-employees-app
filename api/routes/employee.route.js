@@ -15,10 +15,10 @@ const { body } = require("express-validator");
 
 //   }),
 
-router.get("/");
-router.get("/:employeeId");
-router.post("/");
-router.patch("/:id");
-router.delete("/:id");
+router.get("/", EmployeeController.getAllEmployees);
+router.get("/:employeeId", EmployeeController.getEmployee);
+router.post("/", EmployeeController.createNewEmployee);
+router.patch("/:id", EmployeeController.updateEmployee);
+router.delete("/:id", EmployeeController.deleteEmployee);
 
 module.exports = router;
