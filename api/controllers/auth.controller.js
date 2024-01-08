@@ -63,5 +63,20 @@ exports.login = async (req, res) => {
 
   res.json({ accessToken, roles });
 };
-exports.logout = async (req, res) => {};
+
+exports.logout = async (req, res) => {
+  // On the client side, delete the access token and cookie
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.sendStatus(StatusCodes.NO_CONTENT);
+  const refreshToken = cookies.jwt;
+
+  const foundUser = await User.findOne({ refreshToken }).exec();
+  if (foundUser) {
+    foundUser.refreshToken = "";
+    await foundUser.save();
+  }
+
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+  return res.sendStatus(StatusCodes.NO_CONTENT);
+};
 exports.refreshToken = async (req, res) => {};
