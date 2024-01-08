@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomAPIError = require("../errors/CustomAPIError.error");
 const { validationResult, matchedData } = require("express-validator");
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   // receiving validation errors
@@ -52,7 +53,7 @@ exports.login = async (req, res) => {
   const accessToken = foundUser.createAccessToken();
   const refreshToken = foundUser.createRefreshToken();
   foundUser.refreshToken = refreshToken;
-  const result = await foundUser.save();
+  await foundUser.save();
   res.cookie("jwt", refreshToken, {
     httpOnly: true,
     secure: true,
@@ -79,4 +80,18 @@ exports.logout = async (req, res) => {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   return res.sendStatus(StatusCodes.NO_CONTENT);
 };
-exports.refreshToken = async (req, res) => {};
+exports.refreshToken = async (req, res) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.sendStatus(StatusCodes.UNAUTHORIZED);
+  const refreshToken = cookies.jwt;
+
+  const foundUser = await User.findOne({ refreshToken }).exec();
+  if (!foundUser) return res.sendStatus(StatusCodes.FORBIDDEN);
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    if (err || decoded.username !== foundUser.username)
+      return res.sendStatus(StatusCodes.FORBIDDEN);
+    const roles = Object.values(foundUser.roles).filter(Boolean);
+    const accessToken = foundUser.createAccessToken();
+    res.json({ roles, accessToken });
+  });
+};
