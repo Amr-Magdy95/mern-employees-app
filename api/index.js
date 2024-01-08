@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 app.use("/", require("./routes/auth.route"));
 
-// app.use(verifyJWT);
+app.use(require("./middleware/verifyJWT.middleware"));
 app.use("/users", require("./routes/user.route"));
 app.use("/employees", require("./routes/employee.route"));
 
