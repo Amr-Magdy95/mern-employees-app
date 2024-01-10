@@ -80,6 +80,7 @@ exports.logout = async (req, res) => {
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   return res.sendStatus(StatusCodes.NO_CONTENT);
 };
+
 exports.refreshToken = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(StatusCodes.UNAUTHORIZED);
