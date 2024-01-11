@@ -9,3 +9,12 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+@layer components {
+  .form-input {
+    @apply w-full h-10 bg-slate-100 focus:outline-none focus:ring-2 focus:opacity-90 border-slate-800 text-black px-4 py-2 rounded-xl;
+  }
+  .form-button {
+    @apply bg-slate-50 text-black py-2 rounded-lg mt-4 hover:bg-slate-200 disabled:opacity-40;
+  }
+}

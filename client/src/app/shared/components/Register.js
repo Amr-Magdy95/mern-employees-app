@@ -69,7 +69,7 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+
       setSuccess(true);
       setUser("");
       setPwd("");
@@ -231,7 +231,7 @@ const Register = () => {
               </p>
               <button
                 disabled={!validName || !validPwd || !validMatch ? true : false}
-                className="bg-slate-50 text-black py-2 rounded-lg mt-4 hover:bg-slate-200 disabled:opacity-40"
+                className="form-button"
               >
                 Signup
               </button>
