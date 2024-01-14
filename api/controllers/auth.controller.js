@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
       StatusCodes.BAD_REQUEST
     );
   let data = matchedData(req);
+  console.log(data);
   // checking whether user is already registered
   const duplicate = await User.findOne({ username: data.username }).exec();
   if (duplicate)

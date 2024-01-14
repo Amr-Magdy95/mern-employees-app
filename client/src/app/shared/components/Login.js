@@ -1,17 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  faCheck,
-  faInfoCircle,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../../../api/axios";
 import { useAuthContext } from "../../context/AuthProvider";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const LOGIN_URL = "/auth";
 
 const Login = () => {
   const { setAuth } = useAuthContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const userRef = useRef();
   const errRef = useRef();
 
@@ -45,6 +43,7 @@ const Login = () => {
       setAuth({ user, pwd, accessToken, roles });
       setUser("");
       setPwd("");
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("Failed to connect to server");
